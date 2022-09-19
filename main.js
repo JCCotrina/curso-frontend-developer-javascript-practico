@@ -4,12 +4,15 @@ const mobileMenu = document.querySelector('.mobile-menu');
 const menuFriesIcon = document.querySelector('.menu');
 const navShoppingCar = document.querySelector('.navbar-shopping-cart');
 const shoppingCartContainer = document.querySelector('#shoppingCartContainer');
+const productDetail = document.querySelector('#productDetail');
+const productDetailClose= document.querySelector('.product-detail-close');
 const cardsContainer = document.querySelector('.cards-container');
+
 
 navBarEmail.addEventListener("click", toggleDesktopMenu);
 menuFriesIcon.addEventListener("click", toggleMobileMenu);
 navShoppingCar.addEventListener("click", toggleShoppingCar);
-
+productDetailClose.addEventListener("click", closeProductDetail);
 
 let products = []
 
@@ -36,14 +39,75 @@ products.push(
     }
 )
 
+function openProductDetail(){    
+
+    const isShoppingMenuActive = !shoppingCartContainer.classList.contains('inactive');
+
+    if (isShoppingMenuActive){
+        shoppingCartContainer.classList.add('inactive');
+    }
+    
+    productDetail.classList.remove('inactive');
+}
+
+function closeProductDetail(){
+
+    productDetail.classList.add('inactive');
+}
+function toggleDesktopMenu(){
+
+    const isActiveShoppingMenu = !shoppingCartContainer.classList.contains('inactive');
+
+    if (isActiveShoppingMenu){
+        // shoppingMenu.classList.toggle('inactive');
+        shoppingCartContainer.classList.add('inactive');
+    }
+    desktopMenu.classList.toggle('inactive');
+}
+
+function toggleMobileMenu(){
+    
+    const isShoppingMenuActive = !shoppingCartContainer.classList.contains('inactive');
+
+    if (isShoppingMenuActive){
+        shoppingCartContainer.classList.add('inactive');
+    }
+
+    closeProductDetail();
+    mobileMenu.classList.toggle('inactive');
+}
+
+function toggleShoppingCar(){
+
+    const isDesktopMenuActive = !desktopMenu.classList.contains('inactive');
+    const isMobileMenuActive = !mobileMenu.classList.contains('inactive');
+
+    if (isDesktopMenuActive) {
+        // desktopMenu.classList.toggle('inactive');
+        desktopMenu.classList.add('inactive');
+    }
+    if (isMobileMenuActive){
+        // shoppingMenu.classList.toggle('inactive');
+        mobileMenu.classList.add('inactive');
+    }
+
+    closeProductDetail();
+    shoppingCartContainer.classList.toggle('inactive');
+}
+
+
+
 function renderProducts(arr){
-    for (product of arr) {
+
+    for (const product of arr) {
 
         const productCard = document.createElement("div");
         productCard.classList.add("product-card");
     
         const imageProduct = document.createElement("img");
         imageProduct.setAttribute("src", product.image);
+        
+        imageProduct.addEventListener("click", openProductDetail);
     
         const productDetails = document.createElement("div");
         
@@ -58,12 +122,10 @@ function renderProducts(arr){
         const figure = document.createElement("figure");
     
         const imageCart = document.createElement("img");
-        imageCart.setAttribute("src", "./icons/bt_add_to_cart.svg   ");
+        imageCart.setAttribute("src", "./icons/bt_add_to_cart.svg");
     
-        figure.append(imageCart);
-    
-    
-    
+        figure.appendChild(imageCart);
+       
         const productInfo = document.createElement("div");
         productInfo.classList.add("product-info");
     
@@ -72,34 +134,8 @@ function renderProducts(arr){
         productCard.append(imageProduct, productInfo);
     
         cardsContainer.appendChild(productCard);
-        console.log(product);
+
     }
 }
 
 renderProducts(products);
-function toggleDesktopMenu(){
-
-    const isActiveShoppingMenu = !shoppingCartContainer.classList.contains('inactive');
-
-    if (isActiveShoppingMenu){
-        // shoppingMenu.classList.toggle('inactive');
-        shoppingCartContainer.classList.add('inactive');
-    }
-    desktopMenu.classList.toggle('inactive');
-}
-
-function toggleMobileMenu(){
-    mobileMenu.classList.toggle('inactive');
-}
-
-function toggleShoppingCar(){
-
-    const isActiveDesktopMenu = !desktopMenu.classList.contains('inactive');
-
-    if (isActiveDesktopMenu) {
-        // desktopMenu.classList.toggle('inactive');
-        desktopMenu.classList.add('inactive');
-    }
-
-    shoppingCartContainer.classList.toggle('inactive');
-}
